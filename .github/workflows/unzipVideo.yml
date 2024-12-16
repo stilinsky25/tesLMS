@@ -1,0 +1,28 @@
+name: Extract ZIP File
+
+on:
+  push:
+    paths:
+      - "*.zip"  # Workflow hanya akan berjalan jika file ZIP diunggah.
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Extract ZIP File
+        run: |
+          mkdir extracted
+          unzip "*.zip" -d extracted
+          rm *.zip
+
+      - name: Commit Extracted Files
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add extracted/*
+          git commit -m "Extracted ZIP file"
+          git push
